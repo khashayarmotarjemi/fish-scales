@@ -1,9 +1,31 @@
-class NoteGen {
-  List<List<Note>> notes = List.generate(
-      6, (i) => List.filled(12, Note(-1,-1,-1,"err"), growable: false),
-      growable: false);
+import 'dart:async';
 
-  static const _names = {
+class Guitar {
+  StreamController<List<List<Note>>> output = StreamController();
+  final List<int> _tuning;
+  static const _cMajorBase = [0, 2, 4, 5, 7, 9, 11];
+
+  ///
+  /// C : 0
+  /// C# : 1
+  /// if is set to -1 the guitar should be clear (no note active)
+  ///
+  int _key;
+
+  Guitar({t = const [4, 9, 2, 7, 11, 4], k = -1})
+      : _tuning = t,
+        _key = k {
+    _generate();
+    output.sink.add(_notes);
+  }
+
+  void changeScale(int newScale) {
+    _key = newScale;
+    _generate();
+    output.sink.add(_notes);
+  }
+
+  static const names = {
     0: "C",
     1: "C#",
     2: "D",
@@ -18,10 +40,21 @@ class NoteGen {
     11: "B",
   };
 
-  generate() {
+  final List<List<Note>> _notes = List.generate(
+      6,
+      (i) => List.filled(12, Note(-1, -1, -1, "err", false, false),
+          growable: false),
+      growable: false);
+
+  _generate() {
+    List<int>? scale;
+    if (_key != -1) {
+      scale = _cMajorBase.map((n) => (n + _key) % 12).toList();
+    }
+
     for (int y = 0; y < 6; y++) {
       for (int x = 0; x < 12; x++) {
-        notes[y][x] = _getNote(x, y);
+        _notes[y][x] = _getNote(x, y, scale: scale);
       }
     }
   }
@@ -30,33 +63,24 @@ class NoteGen {
   /// 0,0 -> Low E
   /// 0,1 -> F
   ///
-  Note _getNote(int x, int y) {
-    int key = 0; // key of C
-    final strings = [4,9,2,7,11,4];
+  Note _getNote(int x, int y, {List<int>? scale}) {
+    final rn = (x + _tuning[y]) % 12;
 
-    final rn = (x + strings[y]) % 12;
-    return Note(rn, x, y, _names[rn]);
+    bool active;
 
-    // switch (y) {
-    //   // Low E
-    //   case 0:
-    //     final rn = (x + 4) % 12;
-    //     return Note(rn, x, y, _names[rn]);
-    //   case 1:
-    //     break;
-    //   case 2:
-    //     break;
-    //   case 3:
-    //     break;
-    //   case 4:
-    //     break;
-    //   case 5:
-    //     break;
-    // }
-    // return Note(1, 3, 2, _names[1]);
+    if (scale != null) {
+      active = scale.contains(rn);
+    } else {
+      active = false;
+    }
+
+    var first = x == 0;
+
+    return Note(rn, x, y, names[rn], first, active);
   }
 }
 
+///
 ///     y
 ///   x 0----5---------
 ///     |
@@ -69,8 +93,10 @@ class Note {
   final int x;
   final int y;
   final String? name;
+  final bool isFirst;
+  final bool isActive;
 
-  Note(this.rNo, this.x, this.y, this.name);
+  Note(this.rNo, this.x, this.y, this.name, this.isFirst, this.isActive);
 
   @override
   String toString() {

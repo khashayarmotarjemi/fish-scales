@@ -1,10 +1,10 @@
 import 'package:fish_scales/notes/notes.dart';
 
 main() {
-  final gen = NoteGen();
+  // final gen = Guitar();
 
-  gen.generate();
+  // gen.generate();
 
-  print(gen.notes[0][2]);
+  // print(gen.notes[0][2]);
 
 }
