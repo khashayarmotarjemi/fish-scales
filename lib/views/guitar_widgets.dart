@@ -3,8 +3,10 @@ import 'package:fish_scales/notes/notes.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '../notes/constants.dart';
+
 class GuitarWidget extends StatefulWidget {
-  final guitar = GetIt.I<Guitar>();
+  final guitar = GetIt.I<FretBoard>();
   int currentKey = -1;
 
   GuitarWidget({Key? key}) : super(key: key);
@@ -46,14 +48,14 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Row(
-                            children: Guitar.names.keys.map((k) {
+                            children: Music.noteNames.keys.map((k) {
                               return GestureDetector(
                                 onTap: () {
-                                  widget.guitar.changeScale(k);
+                                  widget.guitar.setLayout(ScaleLayout(k));
                                   widget.currentKey = k;
                                 },
                                 child: ChangeKeyButtonWidget(
-                                  name: Guitar.names[k] ?? "err",
+                                  name: Music.noteNames[k] ?? "err",
                                   active: k == widget.currentKey,
                                 ),
                               );
@@ -61,15 +63,15 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              widget.guitar.changeScale(-1);
+                              widget.guitar.setLayout(ClearLayout());
                               widget.currentKey = -1;
                             },
                             child: Card(
                               color: Colors.redAccent,
                               child: Container(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     vertical: 16, horizontal: 45),
-                                child: Text(
+                                child: const Text(
                                   "CLEAR",
                                   style: TextStyle(color: Colors.white),
                                 ),

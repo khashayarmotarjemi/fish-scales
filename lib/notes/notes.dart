@@ -1,5 +1,3 @@
-import 'dart:async';
-
 ///
 ///     y
 ///   x 0----5---------
@@ -13,10 +11,10 @@ class Note {
   final int x;
   final int y;
   final String? name;
-  final bool isFirst;
-  final bool isActive;
+  bool isFirst;
+  bool isActive;
 
-  Note(this.rNo, this.x, this.y, this.name, this.isFirst, this.isActive);
+  Note(this.rNo, this.x, this.y, this.name, {this.isActive = false, this.isFirst = false});
 
   @override
   String toString() {
