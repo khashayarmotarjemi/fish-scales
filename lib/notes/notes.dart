@@ -11,10 +11,10 @@ class Note {
   final int x;
   final int y;
   final String? name;
-  bool isFirst;
-  bool isActive;
+  bool first;
+  bool active;
 
-  Note(this.rNo, this.x, this.y, this.name, {this.isActive = false, this.isFirst = false});
+  Note(this.rNo, this.x, this.y, this.name, {this.active = false, this.first = false});
 
   @override
   String toString() {

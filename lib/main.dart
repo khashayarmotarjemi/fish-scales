@@ -8,7 +8,7 @@ void main() {
   runApp(const MyApp());
 
   final guitar = FretBoard();
-  guitar.setTuning([4, 9, 2, 7, 11, 5]);
+  // guitar.setTuning([4, 9, 2, 7, 11, 5]);
   GetIt.I.registerSingleton(guitar);
 }
 

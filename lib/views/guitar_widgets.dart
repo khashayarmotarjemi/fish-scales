@@ -63,7 +63,9 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              widget.guitar.setLayout(ClearLayout());
+                              // widget.guitar.setLayout(ClearLayout());
+                              widget.guitar
+                                  .setLayout(ChordLayout(Music.chords[0], 1));
                               widget.currentKey = -1;
                             },
                             child: Card(
@@ -78,6 +80,31 @@ class _GuitarWidgetState extends State<GuitarWidget> {
                               ),
                             ),
                           )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: Music.chords.map((ch) {
+                              return GestureDetector(
+                                onTap: () {
+                                  widget.guitar.setLayout(
+                                      ChordLayout(ch, widget.currentKey));
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 10),
+                                    child: Text(ch.type.toString()),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ],
                       ),
                     )
@@ -129,14 +156,14 @@ class NoteWidget extends StatelessWidget {
             // color: note.isActive ? Colors.yellowAccent : Colors.grey[100],
             border: Border(
                 right: BorderSide(
-                    color: note.isFirst ? Colors.red : Colors.black,
-                    width: note.isFirst ? 10 : 2),
+                    color: note.first ? Colors.red : Colors.black,
+                    width: note.first ? 10 : 2),
                 bottom: BorderSide())),
         alignment: Alignment.center,
         height: 50,
         child: Row(
           children: [
-            !note.isFirst
+            !note.first
                 ? Expanded(
                     child: Column(
                     children: [
@@ -153,16 +180,16 @@ class NoteWidget extends StatelessWidget {
                 child: Container(
               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
               decoration: BoxDecoration(
-                  borderRadius: note.isFirst ? null : BorderRadius.circular(40),
-                  color: note.isActive ? Colors.redAccent : Colors.orange[100]),
+                  borderRadius: note.first ? null : BorderRadius.circular(40),
+                  color: note.active ? Colors.redAccent : Colors.orange[100]),
               alignment: Alignment.center,
               child: Text(
                 note.name ?? "err",
-                style: TextStyle(
-                    color: note.isActive ? Colors.white : Colors.black),
+                style:
+                    TextStyle(color: note.active ? Colors.white : Colors.black),
               ),
             )),
-            !note.isFirst
+            !note.first
                 ? Expanded(
                     child: Column(
                     children: [
