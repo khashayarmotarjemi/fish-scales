@@ -1,3 +1,2 @@
-# fish_scales
+Guitar scales and chords shape visualizer made with Flutter.
 
-Simple guitar scales (and other things hopefully later!)
