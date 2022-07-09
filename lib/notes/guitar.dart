@@ -2,11 +2,13 @@
 
 import 'dart:async';
 
+import 'package:fish_scales/layout/models.dart';
+
 import 'constants.dart';
 import 'notes.dart';
 
 class FretBoard {
-  StreamController<List<List<Note>>> output = StreamController();
+  StreamController<FretboardState> output = StreamController();
   List<int> _tuning;
   Layout _layout = ClearLayout();
 
@@ -16,7 +18,7 @@ class FretBoard {
 
   FretBoard({t = Music.stdTuningBase, k = -1}) : _tuning = t {
     _generate();
-    output.sink.add(_notes);
+    output.sink.add(FretboardState(_notes, _layout));
   }
 
   /// input functions
@@ -34,7 +36,7 @@ class FretBoard {
   /// internal functions
   _reloadLayout() {
     _layout.updateNotes(_notes);
-    output.sink.add(_notes);
+    output.sink.add(FretboardState(_notes, _layout));
   }
 
   _generate() {
@@ -48,55 +50,9 @@ class FretBoard {
   }
 }
 
-abstract class Layout {
-  void updateNotes(List<List<Note>> notes) {
-    for (var row in notes) {
-      for (var note in row) {
-        _updateNote(note);
-      }
-    }
-  }
+class FretboardState {
+  final List<List<Note>> notes;
+  final Layout layout;
 
-  void _updateNote(Note note);
-}
-
-class ScaleLayout extends Layout {
-  final int _key;
-
-  ScaleLayout(this._key);
-
-  @override
-  void _updateNote(Note note) {
-    final scale =
-        Music.getScale(_key);
-
-    note.active = scale.contains(note.rNo);
-  }
-}
-
-class ChordLayout extends Layout {
-  final int _root;
-  final Chord _chord;
-  List<int> _notes = [];
-
-  ChordLayout(this._chord, this._root) {
-    _notes = _chord.notes.map((n) => Music.getNoteNo(n -1, _root)).toList();
-  }
-
-  @override
-  void _updateNote(Note note) => note.active = _notes.contains(note.rNo);
-}
-
-class ClearLayout extends Layout {
-  @override
-  void _updateNote(Note note) {
-    note.active = false;
-  }
-}
-
-class Chord {
-  final ChordType type;
-  final List<int> notes;
-
-  const Chord(this.type, this.notes);
+  FretboardState(this.notes, this.layout);
 }

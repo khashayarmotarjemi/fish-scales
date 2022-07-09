@@ -1,4 +1,5 @@
-import 'package:fish_scales/notes/guitar.dart';
+import 'package:fish_scales/layout/models.dart';
+import 'package:fish_scales/layout/widgets.dart';
 
 class Music {
   static const noteNames = {
@@ -31,11 +32,14 @@ class Music {
   static const majorScaleBase = [1, 3, 5, 6, 8, 10, 12];
 
   static const chords = [
-    Chord(ChordType.maj, [1, 5, 8]),
-    Chord(ChordType.min, [1, 4, 8]),
-    Chord(ChordType.maj7, [1, 5, 8, 12]),
-    Chord(ChordType.min7, [1, 4, 8, 12]),
+    Chord(ChordType.maj, [1, 5, 8], "Major"),
+    Chord(ChordType.min, [1, 4, 8], "Minor"),
+    Chord(ChordType.sus4, [1, 6, 8], "Sus4"),
+    Chord(ChordType.sus2, [1, 3, 8], "Sus2"),
+    Chord(ChordType.maj7, [1, 5, 8, 12], "Maj7"),
+    Chord(ChordType.min7, [1, 4, 8, 12], "Min7"),
+    Chord(ChordType.dom7, [1, 5, 8, 11], "Dom7"),
   ];
 }
 
-enum ChordType { maj, min, maj7, min7 }
+enum ChordType { maj, min, maj7, min7, dom7, sus4, sus2 }
