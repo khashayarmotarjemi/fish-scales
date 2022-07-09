@@ -1,3 +1,2 @@
-# fish_scales
+Guitar scales and chords patterns visualizer. 
 
-Simple guitar scales (and other things hopefully later!)
